@@ -58,7 +58,8 @@ func (s *stepper) Step(graph graph.Graph) (graph.Node, error) {
 		return s.ChildNodes[0], nil
 	}
 	s.Size = len(graph.Nodes())
-	node := s.nodes[s.Size/2]
+	t := graph.TopologicalSort()
+	node := t[s.Size/2]
 	s.ParentNodes = graph.Parents(node)
 	s.ChildNodes = graph.Children(node)
 	return node, nil
