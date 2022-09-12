@@ -1,12 +1,12 @@
 package step
 
 import (
-	g "tutero_assignment/pkg/src/graph"
+	"tutero_assignment/pkg/src/graph"
 )
 
 type Stepper interface {
 	// Step returns a prediction for the correct node; or an error if a prediction cannot be made.
-	Step(graph g.Graph) (g.Node, error)
+	Step(graph graph.Graph) (graph.Node, error)
 }
 
 func New() *stepper {
@@ -15,24 +15,24 @@ func New() *stepper {
 }
 
 type stepper struct {
-	parentNodes []g.Node
-	childNodes  []g.Node
-	nodes       []g.Node
-	check       bool
-	size        int
+	ParentNodes []graph.Node
+	ChildNodes  []graph.Node
+	nodes       []graph.Node
+	Check       bool
+	Size        int
 }
 
-func (s *stepper) Step(graph g.Graph) (g.Node, error) {
+func (s *stepper) Step(graph graph.Graph) (graph.Node, error) {
 	if s.nodes == nil {
 		s.nodes = graph.Nodes()
-		s.size = len(graph.Nodes())
+		s.Size = len(graph.Nodes())
 	}
 
-	if s.check == true {
-		if s.size == len(graph.Nodes()) {
-			s.nodes = s.childNodes
+	if s.Check == true {
+		if s.Size == len(graph.Nodes()) {
+			s.nodes = s.ChildNodes
 		} else {
-			s.nodes = s.parentNodes
+			s.nodes = s.ParentNodes
 		}
 		for _, itr := range graph.Nodes() {
 			found := false
@@ -45,21 +45,21 @@ func (s *stepper) Step(graph g.Graph) (g.Node, error) {
 				graph.RemoveNode(itr)
 			}
 		}
-		s.check = false
-		s.size = len(graph.Nodes())
+		s.Check = false
+		s.Size = len(graph.Nodes())
 	}
 	s.nodes = graph.Nodes()
-	if s.size-1 > len(graph.Nodes()) {
-		s.size = len(graph.Nodes())
-		s.check = true
-		if len(s.parentNodes) > 0 {
-			return s.parentNodes[0], nil
+	if s.Size-1 > len(graph.Nodes()) {
+		s.Size = len(graph.Nodes())
+		s.Check = true
+		if len(s.ParentNodes) > 0 {
+			return s.ParentNodes[0], nil
 		}
-		return s.childNodes[0], nil
+		return s.ChildNodes[0], nil
 	}
-	s.size = len(graph.Nodes())
-	node := s.nodes[s.size/2]
-	s.parentNodes = graph.Parents(node)
-	s.childNodes = graph.Children(node)
+	s.Size = len(graph.Nodes())
+	node := s.nodes[s.Size/2]
+	s.ParentNodes = graph.Parents(node)
+	s.ChildNodes = graph.Children(node)
 	return node, nil
 }
