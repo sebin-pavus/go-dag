@@ -55,6 +55,7 @@ func (s *stepper) Step(graph graph.Graph) (graph.Node, error) {
 		if len(s.ParentNodes) > 0 {
 			return s.ParentNodes[0], nil
 		}
+		s.Size--
 		return s.ChildNodes[0], nil
 	}
 	s.Size = len(graph.Nodes())
